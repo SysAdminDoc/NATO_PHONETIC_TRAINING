@@ -13,7 +13,7 @@ A zero-dependency, single-file web app with six training modes, persistent progr
 
 ## Demo
 
-> **[Live Demo](https://sysadmindoc.github.io/nato-phonetic-trainer)** *(update URL after deploying)*
+> **[Live Demo](https://sysadmindoc.github.io/NATO_PHONETIC_TRAINING/)**
 
 ---
 
