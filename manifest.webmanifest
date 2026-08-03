@@ -1,6 +1,7 @@
 {
   "name": "NATO Phonetic Trainer",
   "short_name": "NATO Trainer",
+  "version": "0.2.0",
   "description": "Offline phonetic alphabet practice for clear technical communications.",
   "start_url": "./",
   "display": "standalone",

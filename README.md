@@ -2,6 +2,8 @@
 
 **Learn and master the NATO phonetic alphabet for tech support calls, server readouts, and clear communications.**
 
+![Version](https://img.shields.io/badge/Version-v0.2.0-00ff88)
+
 A zero-dependency web app with multiple training modes, persistent progress tracking, text-to-speech pronunciation, sound effects, alphabet packs, and an installable offline app shell. Built for IT professionals who need to read out hostnames, IPs, serial numbers, and MAC addresses clearly over the phone.
 
 ![HTML5](https://img.shields.io/badge/HTML5-Single_File-E34F26?logo=html5&logoColor=white)

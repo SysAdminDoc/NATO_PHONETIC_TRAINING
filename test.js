@@ -57,6 +57,7 @@ const context = {
 vm.runInNewContext(match[1], context, { filename: 'index.html' });
 const api = window.NATOTrainer;
 assert.ok(api, 'test API is exposed');
+assert.equal(api.version, '0.2.0', 'application version is synchronized');
 assert.equal(Object.keys(api.getAlphabet()).length, 36, 'default pack has 26 letters and 10 digits');
 assert.equal(api.getAlphabet().X, 'X-ray', 'default pack preserves NATO X-ray');
 api.setAlphabet('apco', 'radio');

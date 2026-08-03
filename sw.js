@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nato-trainer-v1';
+const CACHE_NAME = 'nato-trainer-v2';
 const CORE_ASSETS = ['./', './index.html', './manifest.webmanifest', './icon.png'];
 
 self.addEventListener('install', event => {

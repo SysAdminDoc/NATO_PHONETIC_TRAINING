@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>NATO Phonetic Trainer</title>
     <meta name="description" content="Learn and practice the NATO phonetic alphabet for tech support calls. Live">
+    <meta name="application-version" content="0.2.0">
     <meta name="theme-color" content="#0a0f0c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.webmanifest">
@@ -344,6 +345,7 @@
 // ═══════════════════════════════════════════════
 // NATO DATA
 // ═══════════════════════════════════════════════
+const APP_VERSION = '0.2.0';
 const PACKS = {
     icao: {
         label: "ICAO / NATO",
@@ -1759,7 +1761,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         const packOptions = Object.entries(PACKS).map(([id, pack]) => `<option value="${id}" ${id === activePackId ? 'selected' : ''}>${escapeHtml(pack.label)}</option>`).join('');
         const voiceOptions = `<option value="default">Browser default</option>` + voices.map(voice => `<option value="${escapeHtml(voice.voiceURI)}" ${voice.voiceURI === preferences.ttsVoice ? 'selected' : ''}>${escapeHtml(voice.name)} (${escapeHtml(voice.lang)})</option>`).join('');
         el.innerHTML = `
-            <div class="text-center" style="padding:10px 0 20px"><div style="color:var(--text-dim);font-size:0.82rem;letter-spacing:0.1em">TRAINER SETTINGS</div><div style="color:var(--text-dimmer);font-size:0.75rem;margin-top:6px">Preferences stay on this device and work offline.</div></div>
+            <div class="text-center" style="padding:10px 0 20px"><div style="color:var(--text-dim);font-size:0.82rem;letter-spacing:0.1em">TRAINER SETTINGS</div><div style="color:var(--text-dimmer);font-size:0.75rem;margin-top:6px">Preferences stay on this device and work offline.</div><div style="color:var(--text-dimmest);font-size:0.64rem;margin-top:7px">VERSION ${APP_VERSION}</div></div>
             <div class="settings-grid">
                 <div class="setting-card"><label for="setting-pack">ALPHABET PACK</label><select class="input" id="setting-pack">${packOptions}</select></div>
                 <div class="setting-card"><label for="setting-digits">DIGIT PRONUNCIATION</label><select class="input" id="setting-digits"><option value="standard" ${preferences.digits === 'standard' ? 'selected' : ''}>Standard · Five / Nine</option><option value="radio" ${preferences.digits === 'radio' ? 'selected' : ''}>Radio · Fife / Niner</option><option value="plain" ${preferences.digits === 'plain' ? 'selected' : ''}>Plain · Five / Nine</option></select></div>
@@ -1788,6 +1790,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 })();
 
 window.NATOTrainer = {
+    version: APP_VERSION,
     getAlphabet: () => ({ ...NATO }),
     getPacks: () => Object.fromEntries(Object.entries(PACKS).map(([id, pack]) => [id, { label: pack.label, letters: { ...pack.letters } }])),
     setAlphabet: (packId, digitVariant = 'standard') => applyAlphabet(packId, digitVariant, false),

@@ -2,7 +2,7 @@
 
 All notable changes to NATO_PHONETIC_TRAINING will be documented in this file.
 
-## [Unreleased]
+## [v0.2.0] - 2026-08-03
 
 - Added alternate alphabet packs, radio digit variants, accessibility preferences, and persisted TTS controls.
 - Added dictation, speed-ramp, challenge-ladder, per-letter analytics, confusion CSV export, local progress history, and installable offline app-shell files.
