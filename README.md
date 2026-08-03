@@ -2,7 +2,7 @@
 
 **Learn and master the NATO phonetic alphabet for tech support calls, server readouts, and clear communications.**
 
-A zero-dependency, single-file web app with six training modes, persistent progress tracking, text-to-speech pronunciation, sound effects, and keyboard shortcuts. Built for IT professionals who need to read out hostnames, IPs, serial numbers, and MAC addresses clearly over the phone.
+A zero-dependency web app with multiple training modes, persistent progress tracking, text-to-speech pronunciation, sound effects, alphabet packs, and an installable offline app shell. Built for IT professionals who need to read out hostnames, IPs, serial numbers, and MAC addresses clearly over the phone.
 
 ![HTML5](https://img.shields.io/badge/HTML5-Single_File-E34F26?logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?logo=javascript&logoColor=black)
@@ -37,6 +37,12 @@ Generates realistic IT scenarios — hostnames, IPv4 addresses, serial numbers, 
 ### Timed Challenge
 30, 60, or 90 second countdown mode. Answer as many letter-to-word questions as possible before time expires. Tracks personal best across sessions. Countdown tick sounds in the final 10 seconds.
 
+### Dictation, Speed Ramp, and Challenge Ladder
+Hear a phonetic word and enter its character, race against a shrinking response window, or unlock progressively longer IT string formats from hostnames through license keys.
+
+### Progress and Personalization
+Switch between ICAO/NATO, APCO, Western Union, RAF WWII, Able/Baker, Spanish, German, and Russian reference packs. Choose radio digit pronunciations, high-contrast or amber themes, a readable typeface, TTS voice/rate, and an optional filtered phone-noise layer. Per-letter accuracy, activity history, confusion CSV export, local leaderboard, and mastery estimates are stored locally.
+
 ---
 
 ## Additional Highlights
@@ -49,6 +55,7 @@ Generates realistic IT scenarios — hostnames, IPv4 addresses, serial numbers, 
 - **CRT Terminal Aesthetic** — scanline overlay, green-on-black monospace theme
 - **Zero Dependencies** — single HTML file, no build step, no frameworks, no CDN dependencies beyond Google Fonts
 - **Offline Capable** — works without internet after first load (font falls back to system monospace)
+- **Installable PWA** — service-worker app-shell caching keeps the trainer available offline after the first local-hosted load
 
 ---
 
@@ -65,7 +72,11 @@ Generates realistic IT scenarios — hostnames, IPv4 addresses, serial numbers, 
 
 ### Local
 
-Just open `index.html` in any modern browser. No server required.
+Just open `index.html` in any modern browser. No server is required for training; service-worker installation requires a local or hosted HTTP origin.
+
+### Regression checks
+
+Run the dependency-free CLI checks with `node test.js`.
 
 ---
 
