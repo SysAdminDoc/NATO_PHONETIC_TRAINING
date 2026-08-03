@@ -25,6 +25,8 @@ Type any text and see the full NATO phonetic breakdown in real time. Copy to cli
 ### Reference Grid
 Full A–Z plus 0–9 reference with filtering and per-word pronunciation buttons. Includes the correct NATO digit pronunciations (e.g., "Niner" for 9).
 
+The reference view also includes amateur-radio Q-codes, common 10-codes, and field-study prompts for CompTIA A+, Network+, Cisco basics, and support-call readbacks.
+
 ### Spell Drill
 Given a hostname, IP, or custom string, spell out each character phonetically. Supports custom input or random IT-themed challenges like `SRV-DC01`, `172.16.0.50`, `WSUS-SRV01`, and more.
 
@@ -42,6 +44,8 @@ Hear a phonetic word and enter its character, race against a shrinking response 
 
 ### Progress and Personalization
 Switch between ICAO/NATO, APCO, Western Union, RAF WWII, Able/Baker, Spanish, German, and Russian reference packs. Choose radio digit pronunciations, high-contrast or amber themes, a readable typeface, TTS voice/rate, and an optional filtered phone-noise layer. Per-letter accuracy, activity history, confusion CSV export, local leaderboard, and mastery estimates are stored locally.
+
+Voice input can grade spoken phonetic words when the browser exposes Web Speech recognition, with a text fallback otherwise. Spell challenges and timed scores can be copied as shareable URL hashes, and `?embed=1` hides the shell for iframe use.
 
 ---
 

@@ -63,6 +63,8 @@ api.setAlphabet('apco', 'radio');
 assert.equal(api.getAlphabet().A, 'Adam', 'APCO pack switches letter words');
 assert.equal(api.getAlphabet()['5'], 'Fife', 'radio digit variant switches Fife');
 assert.equal(api.getAlphabet()['9'], 'Niner', 'radio digit variant switches Niner');
+assert.ok(api.getReferenceCodes().qCodes.some(item => item.code === 'QTH'), 'Q-code reference includes QTH');
+assert.ok(api.getReferenceCodes().tenCodes.some(item => item.code === '10-4'), '10-code reference includes 10-4');
 const ipv6 = api.generateITString('ipv6');
 assert.equal(ipv6.split(':').length, 8, 'IPv6 generator creates eight groups');
 assert.match(api.generateITString('license'), /^[A-Z0-9]{5}(?:-[A-Z0-9]{5}){4}$/, 'license generator creates five groups');
@@ -71,4 +73,6 @@ assert.match(api.confusionCsv(), /^"Expected","Given","Count"/, 'confusion expor
 assert.match(html, /serviceWorker\.register/, 'PWA registration is wired');
 assert.equal((html.match(/<select\b/g) || []).length, (html.match(/<\/select>/g) || []).length, 'settings select markup is balanced');
 assert.match(html, /id="setting-font"[\s\S]*?<\/select>/, 'font preference control is present');
+assert.match(html, /VOICE INPUT MODE/, 'voice input mode is wired');
+assert.match(html, /embed=1/, 'embeddable mode flag is wired');
 console.log('PASS NATO trainer regression checks');

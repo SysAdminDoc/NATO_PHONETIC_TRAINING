@@ -123,6 +123,10 @@
         .ref-card:hover { background: var(--green-bg2); border-color: var(--green-border); }
         .ref-card .letter { color: var(--green); font-size: 1.25rem; font-weight: 700; width: 22px; text-align: center; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
         .ref-card .word { color: #99bbaa; font-size: 0.82rem; letter-spacing: 0.03em; }
+        .reference-section { margin-top: 22px; }
+        .reference-section h3 { color: var(--text-dim); font-size: 0.7rem; letter-spacing: 0.13em; margin-bottom: 9px; }
+        .code-card .letter { width: 52px; font-size: 0.85rem; }
+        .code-card .word { line-height: 1.35; }
 
         /* Quiz options grid */
         .quiz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 400px; margin: 0 auto; }
@@ -262,8 +266,13 @@
 
         html[data-theme="contrast"] { --green: #ffffff; --green-dim: #ffffff; --green-bg: rgba(255,255,255,0.12); --green-bg2: rgba(255,255,255,0.2); --green-border: rgba(255,255,255,0.7); --green-glow: rgba(255,255,255,0.3); --amber: #ffe600; --red: #ff7180; --cyan: #7de8ff; --bg: #000000; --bg2: rgba(0,0,0,0.8); --text: #ffffff; --text-dim: #d5d5d5; --text-dimmer: #b7b7b7; --text-dimmest: #929292; --border-dim: rgba(255,255,255,0.25); }
         html[data-theme="amber"] { --green: #ffc857; --green-dim: #e6a83d; --green-bg: rgba(255,200,87,0.05); --green-bg2: rgba(255,200,87,0.1); --green-border: rgba(255,200,87,0.28); --green-glow: rgba(255,200,87,0.25); --amber: #ff8c42; --cyan: #7dd3fc; }
+        html[data-theme="catppuccin"] { --green: #a6e3a1; --green-dim: #94d88f; --green-bg: rgba(166,227,161,0.06); --green-bg2: rgba(166,227,161,0.12); --green-border: rgba(166,227,161,0.28); --green-glow: rgba(166,227,161,0.25); --amber: #f9e2af; --red: #f38ba8; --cyan: #89dceb; --bg: #1e1e2e; --bg2: rgba(17,17,27,0.55); --text: #cdd6f4; --text-dim: #a6adc8; --text-dimmer: #7f849c; --text-dimmest: #6c7086; --border-dim: rgba(205,214,244,0.12); }
+        html[data-theme="nord"] { --green: #a3be8c; --green-dim: #8fae76; --green-bg: rgba(163,190,140,0.06); --green-bg2: rgba(163,190,140,0.12); --green-border: rgba(163,190,140,0.28); --green-glow: rgba(163,190,140,0.25); --amber: #ebcb8b; --red: #bf616a; --cyan: #88c0d0; --bg: #2e3440; --bg2: rgba(36,41,51,0.65); --text: #d8dee9; --text-dim: #a7b0c0; --text-dimmer: #7b8494; --text-dimmest: #616978; --border-dim: rgba(216,222,233,0.13); }
         html[data-font="readable"] body { font-family: Verdana, Arial, sans-serif; }
-        html[data-font="readable"] .header h1, html[data-font="readable"] .tab-btn, html[data-font="readable"] .btn, html[data-font="readable"] .input { letter-spacing: 0.02em; }
+        html[data-font="dyslexia"] body { font-family: 'OpenDyslexic', Verdana, Arial, sans-serif; line-height: 1.5; letter-spacing: 0.03em; }
+        html[data-font="readable"] .header h1, html[data-font="readable"] .tab-btn, html[data-font="readable"] .btn, html[data-font="readable"] .input, html[data-font="dyslexia"] .header h1, html[data-font="dyslexia"] .tab-btn, html[data-font="dyslexia"] .btn, html[data-font="dyslexia"] .input { letter-spacing: 0.02em; }
+        html[data-embed="true"] .header, html[data-embed="true"] .stats-bar, html[data-embed="true"] .tabs { display: none; }
+        html[data-embed="true"] .app { max-width: 720px; padding: 8px; }
     </style>
 </head>
 <body>
@@ -306,6 +315,7 @@
         <button class="tab-btn" data-tab="sim">Call Sim</button>
         <button class="tab-btn" data-tab="timed">Timed</button>
         <button class="tab-btn" data-tab="dictate">Dictate</button>
+        <button class="tab-btn" data-tab="voice">Voice</button>
         <button class="tab-btn" data-tab="ramp">Speed Ramp</button>
         <button class="tab-btn" data-tab="ladder">Ladder</button>
         <button class="tab-btn" data-tab="progress">Progress</button>
@@ -320,6 +330,7 @@
     <div class="panel hidden" id="panel-sim"></div>
     <div class="panel hidden" id="panel-timed"></div>
     <div class="panel hidden" id="panel-dictate"></div>
+    <div class="panel hidden" id="panel-voice"></div>
     <div class="panel hidden" id="panel-ramp"></div>
     <div class="panel hidden" id="panel-ladder"></div>
     <div class="panel hidden" id="panel-progress"></div>
@@ -462,6 +473,7 @@ function applyVisualPreferences() {
 
 applyAlphabet(preferences.pack, preferences.digits, false);
 applyVisualPreferences();
+if (typeof window !== 'undefined' && window.location && /(?:^|[?&])embed=1(?:&|$)/.test(window.location.search || '')) document.documentElement.dataset.embed = 'true';
 
 // IT-themed samples
 const SAMPLES = [
@@ -505,6 +517,30 @@ function generateITString(type = 'hostname') {
     if (type === 'mixed') return generateITString(pickRandom(['hostname', 'ip', 'ipv6', 'serial', 'mac', 'license']));
     return generateITString('hostname');
 }
+
+const Q_CODES = [
+    ['QRL', 'I am busy'], ['QRM', 'Interference'], ['QRQ', 'Send faster'], ['QRS', 'Send slower'],
+    ['QRT', 'Stop sending'], ['QRU', 'I have nothing for you'], ['QRV', 'I am ready'], ['QRX', 'Wait'],
+    ['QRZ', 'Who is calling me?'], ['QSB', 'Your signal is fading'], ['QSL', 'I acknowledge receipt'],
+    ['QSO', 'Communication with another station'], ['QSY', 'Change frequency'], ['QTC', 'Message'],
+    ['QTH', 'My position is'], ['QTR', 'The time is'], ['QRO', 'Increase power'], ['QRP', 'Reduce power']
+].map(([code, meaning]) => ({ code, meaning }));
+
+const TEN_CODES = [
+    ['10-1', 'Receiving poorly'], ['10-2', 'Receiving well'], ['10-3', 'Stop transmitting'], ['10-4', 'Affirmative / message received'],
+    ['10-5', 'Relay message'], ['10-6', 'Busy, stand by'], ['10-7', 'Out of service'], ['10-8', 'In service'],
+    ['10-9', 'Repeat message'], ['10-20', 'Location'], ['10-21', 'Call by telephone'], ['10-22', 'Disregard'],
+    ['10-23', 'Stand by'], ['10-33', 'Emergency traffic'], ['10-36', 'Correct time'], ['10-41', 'Beginning tour'],
+    ['10-42', 'Ending tour'], ['10-70', 'Fire'], ['10-80', 'Pursuit in progress']
+].map(([code, meaning]) => ({ code, meaning }));
+
+const STUDY_NOTES = [
+    ['CompTIA A+', 'Practice spelling device names, asset tags, and serial numbers one character at a time.'],
+    ['Network+', 'Use IPv4, IPv6, MAC, and VLAN strings; say every separator and digit clearly.'],
+    ['Cisco basics', 'Repeat interface, VLAN, and switch identifiers at a steady pace before adding speed.'],
+    ['Support calls', 'Confirm critical strings by reading them back in grouped chunks, then verify the final character.'],
+    ['Radio discipline', 'Use radio digit variants for 3, 4, 5, 8, and 9 when the line is noisy or the value is safety-critical.']
+];
 
 // ═══════════════════════════════════════════════
 // SOUND EFFECTS (Web Audio API)
@@ -747,6 +783,28 @@ function downloadText(filename, content, type = 'text/plain') {
     setTimeout(() => URL.revokeObjectURL(link.href), 0);
 }
 
+function makeShareUrl(values) {
+    if (typeof window === 'undefined' || !window.location || typeof URL === 'undefined' || typeof URLSearchParams === 'undefined') return '';
+    const url = new URL(window.location.href);
+    url.hash = new URLSearchParams(values).toString();
+    return url.toString();
+}
+
+function sharedParams() {
+    if (typeof URLSearchParams === 'undefined') return { get: () => null };
+    if (typeof window === 'undefined' || !window.location || !window.location.hash) return new URLSearchParams();
+    return new URLSearchParams(window.location.hash.slice(1));
+}
+
+function copyShareLink(values, label = 'Challenge link') {
+    const link = makeShareUrl(values);
+    if (!link) { showToast('Share links require an HTTP page'); return ''; }
+    const write = navigator.clipboard?.writeText(link);
+    if (write && typeof write.then === 'function') write.then(() => showToast(`${label} copied`)).catch(() => showToast(link));
+    else showToast(link);
+    return link;
+}
+
 // ═══════════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════════
@@ -832,18 +890,27 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 (function initReference() {
     const el = document.getElementById('panel-reference');
     function render() {
-        let html = `<div class="header-meta mb-12">${PACKS[activePackId].label} · ${ALL_KEYS.length} reference entries</div>`;
+        let html = `<div class="header-meta mb-12">${PACKS[activePackId].label} · ${ALL_KEYS.length} alphabet entries plus radio references</div>`;
         html += `<input class="input mb-12" id="ref-filter" placeholder="Filter letter or word..." aria-label="Filter reference entries">`;
-        html += '<div class="ref-grid" id="ref-grid">';
+        html += '<div class="reference-section"><h3>ALPHABET PACK</h3><div class="ref-grid" id="ref-grid">';
         Object.entries(NATO).forEach(([k, v]) => {
-            html += `<div class="ref-card" data-key="${k}" data-word="${v}"><span class="letter">${k}</span><span class="word">${v}</span><button type="button" class="speak-btn" data-speak="${v}" title="Pronounce ${v}" aria-label="Pronounce ${v}">${speakerIcon()}</button></div>`;
+            html += `<div class="ref-card" data-key="${escapeHtml(k)}" data-word="${escapeHtml(v)}"><span class="letter">${escapeHtml(k)}</span><span class="word">${escapeHtml(v)}</span><button type="button" class="speak-btn" data-speak="${escapeHtml(v)}" title="Pronounce ${escapeHtml(v)}" aria-label="Pronounce ${escapeHtml(v)}">${speakerIcon()}</button></div>`;
         });
-        html += '</div>';
+        html += '</div></div>';
+        html += '<div class="reference-section"><h3>AMATEUR RADIO Q-CODES</h3><div class="ref-grid">';
+        Q_CODES.forEach(item => { html += `<div class="ref-card code-card" data-key="${escapeHtml(item.code)}" data-word="${escapeHtml(item.meaning)}"><span class="letter">${escapeHtml(item.code)}</span><span class="word">${escapeHtml(item.meaning)}</span><button type="button" class="speak-btn" data-speak="${escapeHtml(item.code + ', ' + item.meaning)}" title="Read ${escapeHtml(item.code)}" aria-label="Read ${escapeHtml(item.code)}">${speakerIcon()}</button></div>`; });
+        html += '</div></div>';
+        html += '<div class="reference-section"><h3>10-CODES</h3><div class="ref-grid">';
+        TEN_CODES.forEach(item => { html += `<div class="ref-card code-card" data-key="${escapeHtml(item.code)}" data-word="${escapeHtml(item.meaning)}"><span class="letter">${escapeHtml(item.code)}</span><span class="word">${escapeHtml(item.meaning)}</span><button type="button" class="speak-btn" data-speak="${escapeHtml(item.code + ', ' + item.meaning)}" title="Read ${escapeHtml(item.code)}" aria-label="Read ${escapeHtml(item.code)}">${speakerIcon()}</button></div>`; });
+        html += '</div></div>';
+        html += '<div class="reference-section"><h3>FIELD STUDY PACK</h3><div class="progress-stack">';
+        STUDY_NOTES.forEach(([title, note]) => { html += `<div class="progress-card"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(note)}</p></div>`; });
+        html += '</div></div>';
         el.innerHTML = html;
 
         document.getElementById('ref-filter').addEventListener('input', e => {
             const q = e.target.value.toLowerCase();
-            document.querySelectorAll('#ref-grid .ref-card').forEach(card => {
+            el.querySelectorAll('.ref-card').forEach(card => {
                 const match = card.dataset.key.toLowerCase().includes(q) || card.dataset.word.toLowerCase().includes(q);
                 card.style.display = match ? '' : 'none';
             });
@@ -868,18 +935,21 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
     function render() {
         if (state.mode === 'setup') {
+            const sharedChallenge = sharedParams().get('challenge') || '';
             el.innerHTML = `
                 <div class="text-center" style="padding:30px 0">
                     <div style="color:var(--text-dim);font-size:0.82rem;letter-spacing:0.1em;margin-bottom:18px">SPELL OUT HOSTNAMES, IPs, AND SERIAL NUMBERS</div>
                     <div class="flex-center gap-12 mb-20" style="flex-wrap:wrap">
-                        <input class="input" id="spell-custom" placeholder="Enter custom text..." style="width:260px;flex:none">
+                        <input class="input" id="spell-custom" value="${escapeHtml(sharedChallenge)}" placeholder="Enter custom text..." style="width:260px;flex:none">
                         <button class="btn" id="spell-go">GO</button>
+                        <button class="btn btn-dim" id="spell-share">SHARE LINK</button>
                     </div>
                     <div style="color:var(--text-dimmer);font-size:0.78rem;margin-bottom:12px">— OR —</div>
                     <button class="btn btn-amber" id="spell-random">RANDOM IT CHALLENGE</button>
                 </div>
             `;
             document.getElementById('spell-go').addEventListener('click', () => { const v = document.getElementById('spell-custom').value.trim(); if (v) startSpell(v); });
+            document.getElementById('spell-share').addEventListener('click', () => { const v = document.getElementById('spell-custom').value.trim(); if (v) copyShareLink({ challenge: v }, 'Challenge link'); else showToast('Enter a challenge first'); });
             document.getElementById('spell-custom').addEventListener('keydown', e => { if (e.key === 'Enter') { const v = e.target.value.trim(); if (v) startSpell(v); } });
             document.getElementById('spell-random').addEventListener('click', () => startSpell(pickRandom(SAMPLES)));
         } else if (state.mode === 'active') {
@@ -1244,11 +1314,13 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
                     <div class="flex-center gap-12 mt-20">
                         <button class="btn" id="timed-retry">AGAIN</button>
                         <button class="btn btn-dim" id="timed-back">BACK</button>
+                        <button class="btn btn-dim" id="timed-share">SHARE SCORE</button>
                     </div>
                 </div>
             `;
             document.getElementById('timed-retry').addEventListener('click', startTimed);
             document.getElementById('timed-back').addEventListener('click', () => { tState.running = false; render(); });
+            document.getElementById('timed-share').addEventListener('click', () => copyShareLink({ score: tState.score, duration: tState.duration }, 'Score link'));
             return;
         }
 
@@ -1405,7 +1477,82 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 })();
 
 // ═══════════════════════════════════════════════
-// 8. SPEED-RAMP DRILL
+// 8. VOICE INPUT MODE
+// ═══════════════════════════════════════════════
+(function initVoice() {
+    const el = document.getElementById('panel-voice');
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let state = { running: false, current: null, score: 0, total: 0, selected: null, listening: false };
+
+    function normalizeSpeech(value) {
+        return String(value || '').trim().toLocaleLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9а-яё]/gi, '');
+    }
+
+    function render() {
+        if (!state.running) {
+            const support = Recognition ? 'Speech recognition is available in this browser.' : 'Speech recognition is unavailable here; the text fallback remains usable.';
+            el.innerHTML = `<div class="text-center" style="padding:34px 0"><div style="color:var(--text-dim);font-size:0.82rem;letter-spacing:0.1em;margin-bottom:8px">VOICE INPUT MODE</div><div style="color:var(--text-dimmer);font-size:0.75rem;line-height:1.5;max-width:430px;margin:0 auto 8px">See a character, say its phonetic word, and let the browser grade the transcript.</div><div style="color:var(--text-dimmest);font-size:0.68rem;margin-bottom:22px">${support}</div><button type="button" class="btn btn-amber" id="voice-start" style="padding:14px 32px">START VOICE DRILL</button></div>`;
+            document.getElementById('voice-start').addEventListener('click', start);
+            return;
+        }
+        const feedback = state.selected ? `<div style="color:${state.selected.correct ? 'var(--green)' : 'var(--red)'};font-size:0.78rem;margin-top:14px">${state.selected.correct ? 'CORRECT' : `EXPECTED ${escapeHtml(NATO[state.current])}`} · HEARD “${escapeHtml(state.selected.transcript || '(nothing)')}”</div>` : '';
+        el.innerHTML = `<div class="flex-center gap-12 mb-20" style="gap:28px"><div class="text-center"><div class="stat-label">SCORE</div><div class="stat-val" style="color:var(--green)">${state.score}/${state.total}</div></div><div class="text-center"><div class="stat-label">ACCURACY</div><div class="stat-val" style="color:var(--amber)">${state.total ? Math.round(state.score / state.total * 100) : 0}%</div></div></div><div class="text-center" style="padding:22px 0"><div style="color:var(--text-dim);font-size:0.7rem;letter-spacing:0.15em;margin-bottom:10px">SAY THE WORD FOR</div><div style="font-size:4rem;font-weight:700;color:var(--green);text-shadow:0 0 30px var(--green-glow)">${state.current}</div><button type="button" class="btn btn-amber" id="voice-listen" style="margin-top:18px">${state.listening ? 'LISTENING…' : 'START LISTENING'}</button></div><div class="flex-center gap-12"><input class="input" id="voice-fallback" placeholder="Text fallback" style="width:220px;flex:none;text-align:center" autocomplete="off" aria-label="Voice transcript fallback"><button type="button" class="btn btn-dim" id="voice-submit">GRADE TEXT</button><button type="button" class="btn btn-dim" id="voice-stop">STOP</button></div><div class="text-center">${feedback}</div>`;
+        document.getElementById('voice-listen').addEventListener('click', listen);
+        document.getElementById('voice-submit').addEventListener('click', () => { const input = document.getElementById('voice-fallback'); if (input.value.trim()) grade(input.value.trim()); });
+        document.getElementById('voice-stop').addEventListener('click', stop);
+    }
+
+    function start() {
+        state = { running: true, current: null, score: 0, total: 0, selected: null, listening: false };
+        startSession();
+        next();
+    }
+
+    function next() {
+        state.current = pickRandom(ALL_KEYS);
+        state.selected = null;
+        state.listening = false;
+        render();
+        announce(`Say the phonetic word for ${state.current}`);
+    }
+
+    function listen() {
+        if (!Recognition) { showToast('Use the text fallback in this browser'); return; }
+        if (recognition) recognition.abort();
+        recognition = new Recognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 3;
+        recognition.onstart = () => { state.listening = true; render(); };
+        recognition.onerror = event => { state.listening = false; render(); showToast(`Voice input: ${event.error}`); };
+        recognition.onend = () => { state.listening = false; render(); };
+        recognition.onresult = event => {
+            const transcript = Array.from(event.results[0]).map(result => result.transcript).join(' ');
+            grade(transcript);
+        };
+        try { recognition.start(); } catch (error) { state.listening = false; render(); showToast('Voice input could not start'); }
+    }
+
+    function grade(transcript) {
+        if (state.selected !== null) return;
+        const correct = normalizeSpeech(transcript) === normalizeSpeech(NATO[state.current]);
+        state.selected = { correct, transcript };
+        state.total++;
+        if (correct) { state.score++; playCorrect(); } else playWrong();
+        recordAnswer(state.current, transcript, correct, 'voice');
+        if (recognition) recognition.abort();
+        render();
+        setTimeout(next, correct ? 650 : 1100);
+    }
+
+    function stop() { if (recognition) recognition.abort(); state.running = false; state.listening = false; render(); }
+    window.addEventListener('tabchange', event => { if (event.detail.tab !== 'voice' && state.running) stop(); });
+    render();
+})();
+
+// ═══════════════════════════════════════════════
+// 9. SPEED-RAMP DRILL
 // ═══════════════════════════════════════════════
 (function initRamp() {
     const el = document.getElementById('panel-ramp');
@@ -1616,8 +1763,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
             <div class="settings-grid">
                 <div class="setting-card"><label for="setting-pack">ALPHABET PACK</label><select class="input" id="setting-pack">${packOptions}</select></div>
                 <div class="setting-card"><label for="setting-digits">DIGIT PRONUNCIATION</label><select class="input" id="setting-digits"><option value="standard" ${preferences.digits === 'standard' ? 'selected' : ''}>Standard · Five / Nine</option><option value="radio" ${preferences.digits === 'radio' ? 'selected' : ''}>Radio · Fife / Niner</option><option value="plain" ${preferences.digits === 'plain' ? 'selected' : ''}>Plain · Five / Nine</option></select></div>
-                <div class="setting-card"><label for="setting-theme">VISUAL THEME</label><select class="input" id="setting-theme"><option value="crt" ${preferences.theme === 'crt' ? 'selected' : ''}>CRT green</option><option value="amber" ${preferences.theme === 'amber' ? 'selected' : ''}>Amber terminal</option><option value="contrast" ${preferences.theme === 'contrast' ? 'selected' : ''}>High contrast</option></select></div>
-                <div class="setting-card"><label for="setting-font">TYPEFACE</label><select class="input" id="setting-font"><option value="mono" ${preferences.font === 'mono' ? 'selected' : ''}>Terminal mono</option><option value="readable" ${preferences.font === 'readable' ? 'selected' : ''}>Readable sans</option></select></div>
+                <div class="setting-card"><label for="setting-theme">VISUAL THEME</label><select class="input" id="setting-theme"><option value="crt" ${preferences.theme === 'crt' ? 'selected' : ''}>CRT green</option><option value="amber" ${preferences.theme === 'amber' ? 'selected' : ''}>Amber terminal</option><option value="contrast" ${preferences.theme === 'contrast' ? 'selected' : ''}>High contrast</option><option value="catppuccin" ${preferences.theme === 'catppuccin' ? 'selected' : ''}>Catppuccin Mocha</option><option value="nord" ${preferences.theme === 'nord' ? 'selected' : ''}>Nord</option></select></div>
+                <div class="setting-card"><label for="setting-font">TYPEFACE</label><select class="input" id="setting-font"><option value="mono" ${preferences.font === 'mono' ? 'selected' : ''}>Terminal mono</option><option value="readable" ${preferences.font === 'readable' ? 'selected' : ''}>Readable sans</option><option value="dyslexia" ${preferences.font === 'dyslexia' ? 'selected' : ''}>Dyslexia-friendly (OpenDyslexic if installed)</option></select></div>
                 <div class="setting-card"><label for="setting-rate">TTS RATE · <span id="setting-rate-value">${Number(preferences.ttsRate).toFixed(1)}×</span></label><input class="input" id="setting-rate" type="range" min="0.5" max="1.4" step="0.1" value="${preferences.ttsRate}"></div>
                 <div class="setting-card"><label for="setting-voice">TTS VOICE</label><select class="input" id="setting-voice">${voiceOptions}</select></div>
                 <div class="setting-card"><label for="setting-whisper">PHONE AUDIO</label><label style="display:flex;align-items:center;gap:8px;color:var(--text)"><input id="setting-whisper" type="checkbox" ${preferences.whisper ? 'checked' : ''}> Add filtered noise during TTS</label></div>
@@ -1645,6 +1792,8 @@ window.NATOTrainer = {
     getPacks: () => Object.fromEntries(Object.entries(PACKS).map(([id, pack]) => [id, { label: pack.label, letters: { ...pack.letters } }])),
     setAlphabet: (packId, digitVariant = 'standard') => applyAlphabet(packId, digitVariant, false),
     generateITString,
+    getReferenceCodes: () => ({ qCodes: Q_CODES.map(item => ({ ...item })), tenCodes: TEN_CODES.map(item => ({ ...item })) }),
+    makeShareUrl,
     masteryEstimate,
     confusionCsv,
     getStats: () => JSON.parse(JSON.stringify(stats))
